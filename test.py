@@ -2,6 +2,10 @@ from bs4 import BeautifulSoup
 import requests
 from spider import HEADERS
 
+# https://www.youtube.com/watch?v=zKuBDil5dlw&t=1582s
+
+
+
 URL = 'https://translate.academic.ru/abuse/en/ru/'
 
 response = requests.get(URL, headers=HEADERS)
@@ -13,3 +17,5 @@ if response.status_code:
     print(div)
 else:
     print('Error!')
+
+
