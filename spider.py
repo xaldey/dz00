@@ -3,14 +3,14 @@ import datetime
 from bs4 import BeautifulSoup
 
 
-URL_CENTR = 'https://centr-krasnodar.ru/blog'
+# URL_CENTR = 'https://centr-krasnodar.ru/blog'
 #URL_YA = 'https://yandex.ru/search/?lr=35&text='''
 #https://www.yandex.ru/search/?text=abuse&lr=35
 from requests import Response
 
 URL_YA = 'https://yandex.ru/search/?'
 # URL = 'https://go.mail.ru/search?q=seat&fm=1'
-HEADERS = {'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'}
+HEADERS = {'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36', 'accept': '*/*'}
 date_stamp = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M--")
 
 #Сначала ищем в Яндекс
@@ -49,10 +49,11 @@ def recursive_search():
     #возьмем только первый линк и найдем на нём все хрефы анкоров
     look_for = search_links[4][0]
     print('Парсим сайт: ' + look_for)
-    # print('Парсим сайт: ' + URL_CENTR)
     response = requests.get(look_for, headers=HEADERS)
     if response.status_code:
-        print(response.text)
+        soup = BeautifulSoup(response, 'html.parser')
+        div = soup.find('div')
+        print(div)
     else:
         print('Error!')
 
