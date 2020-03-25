@@ -1,16 +1,17 @@
 import requests
 import datetime
 from bs4 import BeautifulSoup
+import time
 
-
-# URL_CENTR = 'https://centr-krasnodar.ru/blog'
+# time.sleep(10)
+URL_CENTR = 'https://centr-krasnodar.ru/blog'
 #URL_YA = 'https://yandex.ru/search/?lr=35&text='''
 #https://www.yandex.ru/search/?text=abuse&lr=35
-from requests import Response
+#from requests import Response
 
 URL_YA = 'https://yandex.ru/search/?'
 # URL = 'https://go.mail.ru/search?q=seat&fm=1'
-HEADERS = {'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36', 'accept': '*/*'}
+HEADERS = {'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'}
 date_stamp = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M--")
 
 #Сначала ищем в Яндекс
@@ -43,19 +44,27 @@ def main():
             result_link = [link, name]
             search_links.append(result_link)
         print(len(search_links))
-    recursive_search()
+    #recursive_search()
 
 def recursive_search():
     #возьмем только первый линк и найдем на нём все хрефы анкоров
     look_for = search_links[4][0]
     print('Парсим сайт: ' + look_for)
-    response = requests.get(look_for, headers=HEADERS)
-    if response.status_code:
-        soup = BeautifulSoup(response, 'html.parser')
-        div = soup.find('div')
-        print(div)
-    else:
-        print('Error!')
+    # print('Парсим сайт: ' + URL_CENTR)
+    recursive_response = requests.get(look_for, headers=HEADERS)
+    recursive_soup = BeautifulSoup(recursive_response.text, 'html.parser')
+    rec_links = []
+    for el in recursive_soup.findAll('a'):
+        link = str(el.get('href'))
+        name = str(el.get_text())
+        # name = el.find('a').get_text()
+        result_link = [link, name]
+        rec_links.append(result_link)
+        print(result_link)
+    print(len(rec_links))
+    # else:
+    #     print('Error!')
+    # print(len(rec_links))
 
     # soup = BeautifulSoup(r, 'html.parser')
     # ancors = soup.find('a').get('href')
@@ -87,3 +96,4 @@ def recursive_search():
 
 if __name__ == '__main__':
     main()
+    recursive_search()
