@@ -9,10 +9,71 @@ URL_CENTR = 'https://centr-krasnodar.ru/blog'
 #https://www.yandex.ru/search/?text=abuse&lr=35
 #from requests import Response
 
-URL_YA = 'https://yandex.ru/search/?'
+ROOT_URL_YA = 'https://yandex.ru/search/?'
+#ROOT_URL_GOOGLE = 'https://google.com/search/?'
 # URL = 'https://go.mail.ru/search?q=seat&fm=1'
 HEADERS = {'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'}
-date_stamp = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M--")
+#date_stamp = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M--")
+
+search_links = []
+recursive_search_array = []
+
+#Сначала ищем в Яндекс
+serp_string = input('Что ищем? ')
+serp_results = input('Сколько результатов найти? ')
+rec_search = True
+search_url = ROOT_URL_YA + 'text=' + serp_string + '&lr=' + serp_results
+
+#filename = date_stamp + 'index.html'
+# YA SERP
+
+
+def main():
+    #Закомментировал, т.к. парсю пока локальную страницу
+    # with open(filename, 'r') as input_file:
+    response = requests.get(search_url, headers=HEADERS)
+    if response.ok:
+        soup = BeautifulSoup(response, 'html.parser')
+        li = soup.find_all('li', class_='serp-item')
+        for el in li:
+            link = el.find('a').get('href')
+            name = el.find('a').get_text()
+            result_link = [link, name]
+            search_links.append(result_link)
+        print(len(search_links))
+    else:
+        print('Error!')
+
+
+# def main():
+#     #Закомментировал, т.к. парсю пока локальную страницу
+#     # with open(filename, 'r') as input_file:
+#     with open('index.html', 'r') as input_file:
+#         soup = BeautifulSoup(input_file, 'html.parser')
+#         li = soup.find_all('li', class_='serp-item')
+#         for el in li:
+#             link = el.find('a').get('href')
+#             name = el.find('a').get_text()
+#             result_link = [link, name]
+#             search_links.append(result_link)
+#         print(len(search_links))
+#recursive_search()
+
+#Блок для локального парсинга страницы
+# def main():
+#     #Закомментировал, т.к. парсю пока локальную страницу
+#     # with open(filename, 'r') as input_file:
+#     with open('index.html', 'r') as input_file:
+#         soup = BeautifulSoup(input_file, 'html.parser')
+#         li = soup.find_all('li', class_='serp-item')
+#         for el in li:
+#             link = el.find('a').get('href')
+#             name = el.find('a').get_text()
+#             result_link = [link, name]
+#             search_links.append(result_link)
+#         print(len(search_links))
+#     #recursive_search()
+
 
 #Сначала ищем в Яндекс
 # serp_string = input('Что ищем? ')
@@ -30,21 +91,7 @@ date_stamp = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M--")
 # save_serp_local()
 
 # YA SERP
-search_links = []
-recursive_search_array = []
-def main():
-    #Закомментировал, т.к. парсю пока локальную страницу
-    # with open(filename, 'r') as input_file:
-    with open('index.html', 'r') as input_file:
-        soup = BeautifulSoup(input_file, 'html.parser')
-        li = soup.find_all('li', class_='serp-item')
-        for el in li:
-            link = el.find('a').get('href')
-            name = el.find('a').get_text()
-            result_link = [link, name]
-            search_links.append(result_link)
-        print(len(search_links))
-    #recursive_search()
+
 
 def recursive_search():
     #возьмем только первый линк и найдем на нём все хрефы анкоров
