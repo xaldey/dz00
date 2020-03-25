@@ -2,12 +2,10 @@ import requests
 import datetime
 from bs4 import BeautifulSoup
 import time
-
 # time.sleep(10)
-URL_CENTR = 'https://centr-krasnodar.ru/blog'
+
 #URL_YA = 'https://yandex.ru/search/?lr=35&text='''
 #https://www.yandex.ru/search/?text=abuse&lr=35
-#from requests import Response
 
 ROOT_URL_YA = 'https://yandex.ru/search/?'
 #ROOT_URL_GOOGLE = 'https://google.com/search/?'
@@ -24,16 +22,10 @@ serp_results = input('Сколько результатов найти? ')
 rec_search = True
 search_url = ROOT_URL_YA + 'text=' + serp_string + '&lr=' + serp_results
 
-#filename = date_stamp + 'index.html'
-# YA SERP
-
-
 def main():
-    #Закомментировал, т.к. парсю пока локальную страницу
-    # with open(filename, 'r') as input_file:
     response = requests.get(search_url, headers=HEADERS)
     if response.ok:
-        soup = BeautifulSoup(response, 'html.parser')
+        soup = BeautifulSoup(response.text, 'html.parser')
         li = soup.find_all('li', class_='serp-item')
         for el in li:
             link = el.find('a').get('href')
@@ -44,6 +36,21 @@ def main():
     else:
         print('Error!')
 
+def recursive_search():
+    #возьмем только первый линк и найдем на нём все хрефы анкоров
+    look_for = search_links[1][0]
+    print('Парсим сайт: ' + look_for)
+    recursive_response = requests.get(look_for, headers=HEADERS)
+    recursive_soup = BeautifulSoup(recursive_response.text, 'html.parser')
+    recursive_search_array = []
+    for el in recursive_soup.findAll('a'):
+        link = str(el.get('href'))
+        name = str(el.get_text())
+        # name = el.find('a').get_text()
+        result_link = [link, name]
+        recursive_search_array.append(result_link)
+        print(result_link)
+    print(len(recursive_search_array))
 
 # def main():
 #     #Закомментировал, т.к. парсю пока локальную страницу
@@ -92,53 +99,6 @@ def main():
 
 # YA SERP
 
-
-def recursive_search():
-    #возьмем только первый линк и найдем на нём все хрефы анкоров
-    look_for = search_links[4][0]
-    print('Парсим сайт: ' + look_for)
-    # print('Парсим сайт: ' + URL_CENTR)
-    recursive_response = requests.get(look_for, headers=HEADERS)
-    recursive_soup = BeautifulSoup(recursive_response.text, 'html.parser')
-    rec_links = []
-    for el in recursive_soup.findAll('a'):
-        link = str(el.get('href'))
-        name = str(el.get_text())
-        # name = el.find('a').get_text()
-        result_link = [link, name]
-        rec_links.append(result_link)
-        print(result_link)
-    print(len(rec_links))
-    # else:
-    #     print('Error!')
-    # print(len(rec_links))
-
-    # soup = BeautifulSoup(r, 'html.parser')
-    # ancors = soup.find('a').get('href')
-    # print(len(ancors))
-
-        # look =print(type(name)) requests.get(look_for, headers=HEADERS)
-        # recursive_soup = BeautifulSoup(look, 'html.parser')
-        # print(recursive_soup)
-
-        # for elem in search_links:
-        #     resp = requests.get(elem[], headers=HEADERS)
-        #     recursive_soup = BeautifulSoup(resp, 'html.parser')
-        #     print(recursive_soup)
-
-        # for elem in search_links:
-        #     resp = requests.get(elem[0], headers=HEADERS)
-        #     recursive_soup = BeautifulSoup(resp, 'html.parser')
-        #     recursive_search = recursive_soup.find_all('a').get('href')
-        #     recursive_search_array.append(recursive_search)
-        #     print(len(recursive_search_array))
-        # for elem in search_links:
-        #     recursive_link = search_links[0]
-        #     resp = requests.get(recursive_link, headers=HEADERS)
-        #     recursive_soup = BeautifulSoup(resp, 'html.parser')
-        #     recursive_search = recursive_soup.find_all('a')
-        #     recursive_search_array.append(recursive_search)
-        # print(len(recursive_search_array))
 
 
 if __name__ == '__main__':
