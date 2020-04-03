@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+import setuptools
 
 # with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 #     README = readme.read()
@@ -7,10 +7,10 @@ from setuptools import setup
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
-setup(
-    name='request-parser',
+setuptools.setup(
+    name='Parse',
     version='0.1',
-    packages=['parser'],
+    packages=setuptools.find_packages(),
     include_package_data=True,
     license='GNU General Public License v3.0',
     description='Simple parser of search engines',
@@ -18,6 +18,6 @@ setup(
     url='https://github.com/xaldey/dz00',
     author='xaldey',
     author_email='xaldey@mail.ru',
-    keywords = ['json', 'requests', 'BeautifulSoup', 'csv'],
-    classifiers = [],
+    keywords=['requests', 'BeautifulSoup', 'csv'],
+    classifiers=[],
 )
